@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Translator</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #000000; /* Black background */
+      color: #ffffff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background-color: #1c1c1c; /* Dark gray for contrast */
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+      max-width: 600px;
+      width: 100%;
+    }
+
+    h1 {
+      text-align: center;
+      color: #fff;
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      border: none;
+      background-color: #3d3d3d; /* Darker gray */
+      color: #ffffff;
+      font-size: 1.2rem;
+      resize: none;
+    }
+
+    select, button {
+      width: 100%;
+      padding: 15px;
+      margin: 10px 0;
+      font-size: 1.2rem;
+      border-radius: 10px;
+      border: none;
+      background-color: #9b59b6; /* Purple */
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    select {
+      background-color: #3d3d3d; /* Darker gray */
+    }
+
+    select:focus, textarea:focus, button:hover {
+      outline: none;
+      background-color: #8e44ad; /* Darker purple on hover */
+    }
+
+    button {
+      background-color: #8e44ad; /* Purple */
+    }
+
+    button:hover {
+      background-color: #9b59b6; /* Lighter purple on hover */
+    }
+
+    .result {
+      background-color: #4e4e4e; /* Dark gray */
+      padding: 20px;
+      margin-top: 20px;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 1.3rem;
+      min-height: 50px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 2rem;
+      }
+
+      textarea, select, button {
+        font-size: 1rem;
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Translator</h1>
+    <textarea id="text-input" placeholder="Enter text to translate..."></textarea>
+
+    <label for="language-select"></label>
+    <select id="language-select">
+      <option value="hi">Hindi</option>
+      <option value="ml">Malayalam</option>
+      <option value="es">Spanish</option>
+      <option value="de">German</option>
+      <option value="en">English</option>
+    </select>
+
+    <button id="translate-btn">Translate</button>
+
+    <div class="result" id="translated-result">
+      Your translation will appear here.
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('translate-btn').addEventListener('click', function() {
+      const text = document.getElementById('text-input').value;
+      const targetLang = document.getElementById('language-select').value;
+
+      // Ensure text is entered
+      if (text === '') {
+        alert('Please enter text to translate.');
+        return;
+      }
+
+      // API for translation
+      const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|${targetLang}`;
+
+      // Fetch translation
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          const translatedText = data.responseData.translatedText;
+          document.getElementById('translated-result').textContent = translatedText;
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          document.getElementById('translated-result').textContent = 'Translation failed. Try again.';
+        });
+    });
+  </script>
+
+</body>
+</html>
